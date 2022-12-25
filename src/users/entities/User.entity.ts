@@ -16,4 +16,7 @@ export class User{
 
   @Column()
   createdAt:Date;
+
+  @Column()
+  isVerified : boolean = false
 }
