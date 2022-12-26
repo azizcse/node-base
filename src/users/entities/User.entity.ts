@@ -1,8 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Post } from '../../posts/entities/post.entity';
+import { Profile } from './Profile.entity';
 
-@Entity({name:'users'})
-export class User{
-  @PrimaryGeneratedColumn({type:'bigint'})
+@Entity({ name: 'users' })
+export class User {
+  @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
 
   @Column()
@@ -15,8 +17,15 @@ export class User{
   password: string;
 
   @Column()
-  createdAt:Date;
+  createdAt: Date;
 
   @Column()
-  isVerified : boolean = false
+  isVerified: boolean = false;
+
+  @OneToOne(() => Profile)
+  @JoinColumn()
+  profile: Profile;
+
+  @OneToMany(() => Post, (post) => post.user)
+  posts: Post;
 }

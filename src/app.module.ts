@@ -7,6 +7,9 @@ import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/entities/User.entity';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { PostsModule } from './posts/posts.module';
+import { Profile } from './users/entities/Profile.entity';
+import { Post } from './posts/entities/post.entity';
 
 @Module({
   imports: [
@@ -18,7 +21,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
       username: 'root',
       password: 'root',
       database: 'nest_base_db',
-      entities: [User],
+      entities: [User,Profile, Post],
       synchronize: true,
     }),
 
@@ -34,6 +37,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
     }),
     UsersModule,
     AuthModule,
+    PostsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

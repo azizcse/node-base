@@ -1,15 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { User } from './entities/User.entity';
-import { CreateUserParam } from '../utils/types';
+import { CreateProfileParams, CreateUserParam } from '../utils/types';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Profile } from './entities/Profile.entity';
 
 @Injectable()
 export class UsersService {
 
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(Profile) private profileRepository:Repository<Profile>,
   ) {
   }
 
@@ -34,6 +36,13 @@ export class UsersService {
       return Promise.resolve(user);
     }
     return undefined;
+  }
+
+  async createProfile(id:number, profileDate:CreateProfileParams){
+    const userObj = await this.userRepository.findOneBy({ id });
+    const newProfile = this.profileRepository.create({...profileDate});
+    userObj.profile = await this.profileRepository.save(newProfile);
+    return this.userRepository.save(userObj);
   }
 
 }

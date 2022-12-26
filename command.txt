@@ -1,0 +1,5 @@
+1. New project
+ - nest new new-project-name
+2. Create module
+ - nest g resource
+ - REST API
