@@ -15,6 +15,11 @@ export class UsersService {
   ) {
   }
 
+
+  async getAllUsers():Promise<User[]>{
+    return this.userRepository.find({relations:['profile', 'posts']});
+  }
+
   async createUser(userDetails: CreateUserParam) {
     const { password, ...rest } = userDetails;
     const hash = await bcrypt.hash(password, 12);
@@ -30,8 +35,17 @@ export class UsersService {
     return undefined;
   }
 
-  findOne(id: number): Promise<User | undefined> {
-    const user = this.userRepository.findOneBy({ id });
+  async findById(id: number): Promise<User | undefined> {
+    const user = await this.userRepository.findOneBy({ id });
+    if (user) {
+      return Promise.resolve(user);
+    }
+    return undefined;
+  }
+
+
+  async findOne(id: number): Promise<User | undefined> {
+    const user = await this.userRepository.findOneBy({ id },);
     if (user) {
       return Promise.resolve(user);
     }

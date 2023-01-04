@@ -11,16 +11,17 @@ import { PostsModule } from './posts/posts.module';
 import { Profile } from './users/entities/Profile.entity';
 import { Post } from './posts/entities/post.entity';
 
+
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({isGlobal:true}),
     TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 8889,
-      username: 'root',
-      password: 'root',
-      database: 'nest_base_db',
+      type: 'postgres',
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT),
+      username: process.env.DB_USER,
+      password: "postgres",
+      database: process.env.DB_NAME,
       entities: [User,Profile, Post],
       synchronize: true,
     }),

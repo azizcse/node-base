@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Post } from '../../posts/entities/post.entity';
 import { Profile } from './Profile.entity';
@@ -13,6 +14,7 @@ export class User {
   @Column()
   email: string;
 
+  @Exclude()
   @Column()
   password: string;
 
