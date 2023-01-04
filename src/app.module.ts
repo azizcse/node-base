@@ -20,7 +20,7 @@ import { Post } from './posts/entities/post.entity';
       host: process.env.DB_HOST,
       port: parseInt(process.env.DB_PORT),
       username: process.env.DB_USER,
-      password: "postgres",
+      password: "Aziz1062",
       database: process.env.DB_NAME,
       entities: [User,Profile, Post],
       synchronize: true,
