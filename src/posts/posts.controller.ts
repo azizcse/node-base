@@ -16,8 +16,10 @@ export class PostsController {
   }
 
   @Get()
-  findAll() {
-    return this.postsService.findAll();
+  @UseGuards(JwtAuthGuard)
+  findAll(@Req() request) {
+    const userId = request.user.userId;
+    return this.postsService.findAll(userId);
   }
 
   @Get(':id')

@@ -10,29 +10,31 @@ import { UsersService } from 'src/users/users.service';
 @Injectable()
 export class PostsService {
   constructor(
-    private userService:UsersService,
-    @InjectRepository(Post) private postRepository: Repository<Post>,) {
+    private userService: UsersService,
+    @InjectRepository(Post) private postRepository: Repository<Post>) {
   }
 
   async create(userId: number, createPostParams: CreatePostParams) {
     const user = await this.userService.findById(userId);
-    if(!user){
+    if (!user) {
       throw new HttpException(
         'User not found. Cannot create Profile',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    const newPost=  this.postRepository.create({...createPostParams, user})
+    const newPost = this.postRepository.create({ ...createPostParams, user });
     return this.postRepository.save(newPost);
   }
 
-  findAll() {
-    return `This action returns all posts`;
+  async findAll(userId: number) {
+    //return this.postRepository.query(`SELECT * FROM posts WHERE user=${userId}`)
+    const user = await this.userService.findById(userId);
+    return this.postRepository.findBy({ user });
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} post`;
+    return this.postRepository.findBy({ id });
   }
 
   update(id: number, updatePostDto: UpdatePostDto) {
