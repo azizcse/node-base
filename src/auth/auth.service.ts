@@ -7,40 +7,40 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
-  private refreshTokens: RefreshToken[] = [];
 
   constructor(private readonly userService: UsersService) {
   }
 
   async refresh(refreshStr: string): Promise<string | undefined> {
-    const refreshToken = await this.retrieveRefreshToken(refreshStr);
-    if (!refreshToken) {
+    const userId = await this.retrieveRefreshToken(refreshStr);
+    console.log(userId);
+    if (!userId) {
       return undefined;
     }
 
-    const user = await this.userService.findOne(refreshToken.userId);
+    const user = await this.userService.findOne(userId);
     if (!user) {
       return undefined;
     }
-
+    console.log(user.name);
     const accessToken = {
-      userId: refreshToken.userId,
+      userId: userId,
     };
 
     return sign(accessToken, process.env.ACCESS_SECRET, { expiresIn: '1h' });
   }
 
-  private retrieveRefreshToken(
+  private async retrieveRefreshToken(
     refreshStr: string,
-  ): Promise<RefreshToken | undefined> {
+  ): Promise<number | undefined> {
     try {
-      const decoded = verify(refreshStr, process.env.REFRESH_SECRET);
+      const decoded = await verify(refreshStr, process.env.REFRESH_SECRET);
       if (typeof decoded === 'string') {
         return undefined;
       }
-      return Promise.resolve(
-        this.refreshTokens.find((token) => token.id === decoded.id),
-      );
+      console.log(decoded)
+      return Promise.resolve(decoded.id)
+
     } catch (e) {
       return undefined;
     }
@@ -65,30 +65,25 @@ export class AuthService {
   private async newRefreshAndAccessToken(
     user: User,
     values: { userAgent: string; ipAddress: string },
-  ): Promise<{ accessToken: string; refreshToken: string, id:number, name:string }> {
-    const refreshObject = new RefreshToken({
-      id:
-        this.refreshTokens.length === 0
-          ? 0
-          : this.refreshTokens[this.refreshTokens.length - 1].id + 1,
-      ...values,
-      userId: user.id,
-    });
-    this.refreshTokens.push(refreshObject);
+  ): Promise<{ accessToken: string; refreshToken: string, id: number, name: string }> {
+
+    let payload = {
+      userId:user.id,
+      email:user.email,
+      name:user.name,
+    }
 
     return {
-      refreshToken: refreshObject.sign(),
+      refreshToken: sign(payload, process.env.REFRESH_SECRET),
       accessToken: sign(
-        {
-          userId: user.id,
-        },
+        payload,
         process.env.ACCESS_SECRET,
         {
-          expiresIn: '1h',
+          expiresIn: '1m',
         },
       ),
-      id:user.id,
-      name:user.name
+      id: user.id,
+      name: user.name,
     };
   }
 
@@ -99,8 +94,8 @@ export class AuthService {
       return;
     }
     // delete refreshtoken from db
-    this.refreshTokens = this.refreshTokens.filter(
+    /*this.refreshTokens = this.refreshTokens.filter(
       (refreshToken) => refreshToken.id !== refreshToken.id,
-    );
+    );*/
   }
 }

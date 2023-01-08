@@ -1,9 +1,10 @@
 import { Exclude } from 'class-transformer';
-import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import { Post } from '../../posts/entities/post.entity';
 import { Profile } from './Profile.entity';
 
 @Entity({ name: 'users' })
+@Unique(['email'])
 export class User {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
@@ -11,7 +12,7 @@ export class User {
   @Column()
   name: string;
 
-  @Column()
+  @Column({unique:true})
   email: string;
 
   @Exclude()
@@ -30,4 +31,5 @@ export class User {
 
   @OneToMany(() => Post, (post) => post.user)
   posts: Post;
+
 }

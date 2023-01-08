@@ -6,12 +6,14 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { CreatePostDto } from '../posts/dto/create-post.dto';
 import { CreateProfileDto } from './dtos/CreateProfile.dto';
 import { ApiBody } from '@nestjs/swagger';
+import { Mailer } from '../utils/mailer';
 
 @Controller('users')
 export class UsersController {
- 
+  mailer:Mailer
   constructor(private readonly userService: UsersService,
               private mailService: MailerService) {
+    this.mailer = new Mailer(mailService)
   }
 
   @Get()
@@ -22,19 +24,21 @@ export class UsersController {
   @Post()
   @UsePipes(new ValidationPipe())
   async createUser(@Body() createUserDto: CreateUserDto) {
-    const user = this.userService.createUser(createUserDto);
-    //const result = await this.sendEmail();
+    const user = await this.userService.createUser(createUserDto);
+    //this.sendEmail();
     //console.log(result);
-    return user;
+    const {password, ...rest} = user
+    return rest;
   }
 
   async sendEmail() {
-    return this.mailService.sendMail({
+    return await this.mailer.sendRegistrationEmail();
+    /*return this.mailService.sendMail({
       to: 'imazizul@gmail.com',
       from: 'imazizul@gmail.com',
       subject: 'This is test email',
       text: 'Welcome to nest js mailer',
-    });
+    });*/
   }
 
 

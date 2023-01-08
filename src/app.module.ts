@@ -10,6 +10,8 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { PostsModule } from './posts/posts.module';
 import { Profile } from './users/entities/Profile.entity';
 import { Post } from './posts/entities/post.entity';
+import { CommonModule } from './common/common.module';
+import { MailModule } from './mail/mail.module';
 
 
 @Module({
@@ -39,6 +41,8 @@ import { Post } from './posts/entities/post.entity';
     UsersModule,
     AuthModule,
     PostsModule,
+    CommonModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -4,9 +4,8 @@ export class RefreshToken{
     constructor(init?: Partial<RefreshToken>) {
         Object.assign(init);
     }
-
-    id: number;
     userId: number;
+    email:string;
     userAgent: string;
     ipAddress: string;
 
