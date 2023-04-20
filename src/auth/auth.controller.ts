@@ -4,8 +4,9 @@ import { LoginDto } from './dtos/login.dto';
 import RefreshTokenDto from './dtos/refresh-token.dto';
 import { encode, decode } from 'url-safe-base64';
 import { MailService } from '../mail/mail.service';
+import { ApiTags } from '@nestjs/swagger';
 
-
+@ApiTags("Auth")
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService, private mailService: MailService) {

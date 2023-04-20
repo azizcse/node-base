@@ -5,9 +5,10 @@ import { CreateUserDto } from './dtos/CreateUser.dto';
 import { MailerService } from '@nestjs-modules/mailer';
 import { CreatePostDto } from '../posts/dto/create-post.dto';
 import { CreateProfileDto } from './dtos/CreateProfile.dto';
-import { ApiBody } from '@nestjs/swagger';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { Mailer } from '../utils/mailer';
 
+@ApiTags("User")
 @Controller('users')
 export class UsersController {
   mailer:Mailer
